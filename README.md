@@ -3,11 +3,6 @@ Input image, get back matching image fashion results, using Gradio and Fashion-C
 
 ```
 fashion-image-search
-└─ README.md
-
-```
-```
-fashion-image-search
 ├─ back
 │  ├─ infra
 │  │  ├─ embedding
