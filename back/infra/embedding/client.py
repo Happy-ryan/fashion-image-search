@@ -9,6 +9,7 @@ class EmbeddingClient:
         async with httpx.AsyncClient() as client:
             response = await client.get(
                 f"{self.API_URL}/{rid}",
+                timeout=None
             )
             
             embedding = response.json()["embedding"]
