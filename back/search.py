@@ -13,4 +13,4 @@ async def servercheck() -> dict:
     
 
 if __name__ == "__main__":
-    uvicorn.run("embedding:app", port=9001, host="0.0.0.0", reload=False)
+    uvicorn.run("search:app", port=9001, host="0.0.0.0", reload=False)
