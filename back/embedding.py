@@ -3,7 +3,8 @@ import uvicorn
 
 app = FastAPI()
 
-# app.include_router(router=, prefix=)
+from routes.embedding import embedding_router
+app.include_router(embedding_router, prefix="/embedding")
 
 @app.get("/")
 async def servercheck() -> dict:

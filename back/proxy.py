@@ -3,7 +3,9 @@ import uvicorn
 
 app = FastAPI()
 
-# app.include_router(router=, prefix=)
+from routes.proxy import proxy_router
+
+app.include_router(proxy_router, prefix="/proxy")
 
 @app.get("/")
 async def servercheck() -> dict:
