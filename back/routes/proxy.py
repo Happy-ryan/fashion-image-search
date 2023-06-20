@@ -10,9 +10,13 @@ import uuid
 import os
 import httpx
 
+from infra.embedding.client import EmbeddingClient
+
 proxy_router = APIRouter(
     tags=["Proxy"],
 )
+
+embedding_client = EmbeddingClient()
 
 @proxy_router.post("/search-by-image")
 async def search_by_image(file: UploadFile) -> dict:
@@ -25,7 +29,9 @@ async def search_by_image(file: UploadFile) -> dict:
     with open(os.path.join(UPLOAD_DIR, filname), "wb") as fp:
         fp.write(content) # -- 서버 로컬스토리지에 이미지 저장
         
+    embedding = await embedding_client.get_embedding(rid)
     
     return {
-        "msg": "OK"
+        "msg": "OK",
+        "embedding": embedding
     }
