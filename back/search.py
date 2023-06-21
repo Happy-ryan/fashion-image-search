@@ -3,7 +3,9 @@ import uvicorn
 
 app = FastAPI()
 
-# app.include_router(router=, prefix=)
+from routes.search import search_router
+
+app.include_router(search_router, prefix="/search")
 
 @app.get("/")
 async def servercheck() -> dict:
