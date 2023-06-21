@@ -11,12 +11,14 @@ import os
 import httpx
 
 from infra.embedding.client import EmbeddingClient
+from infra.search.client import SearchClient
 
 proxy_router = APIRouter(
     tags=["Proxy"],
 )
 
 embedding_client = EmbeddingClient()
+search_client = SearchClient()
 
 @proxy_router.post("/search-by-image")
 async def search_by_image(file: UploadFile) -> dict:
@@ -31,7 +33,11 @@ async def search_by_image(file: UploadFile) -> dict:
         
     embedding = await embedding_client.get_embedding(rid)
     
+    dists, ids = await search_client.search(embedding)
+    
     return {
         "msg": "OK",
-        "embedding": embedding
+        "embedding": embedding,
+        "dists": dists,
+        "ids": ids
     }
