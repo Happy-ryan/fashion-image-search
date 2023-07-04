@@ -1,1 +1,9 @@
-.
+.python-version
+storage
+test
+*.pyc
+error_log.md
+__pycache__
+gradio_practice
+log.csv
+.git
