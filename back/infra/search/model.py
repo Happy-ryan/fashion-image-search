@@ -3,8 +3,11 @@ import os
 import numpy as np
 import pickle
 
+from .utils import cos_sim
+
 '''
-faiss 사용법 참고 : 2단계에 걸쳐서 진행, 변수는 웬만해서는 np.array로 들어간다.
+faiss 사용법 참고(https://lsjsj92.tistory.com/605)
+주의) 2단계에 걸쳐서 진행, 변수는 웬만해서는 np.array로 들어간다. 
 1) output_embeddings에 id 부여 (현재는 output_embeddigs를 pkl로 저장함)
 index.add_with_ids(output_embs, ids) -> 각 임베딩과 id를 매칭시켜주는 작업
 2) 입력으로 들어온 input_embedding과 유사도 검색
@@ -31,11 +34,31 @@ class SearchModel:
         self.index.add_with_ids(np.array(embs), np.array(ids))
         
         
-    def search(self, embedding: list[float]) -> (list[float], list[int]):
-        dists, ids = self.index.search(np.array(embedding).reshape(1, -1), 2)
-        print("dists.dtype은 여기에 있다!", dists.dtype)
+    def search(self, embedding: list[float], thresh: float) -> (list[float], list[int]):
+        dists, ids = self.index.search(np.array(embedding).reshape(1, -1), 10)
+        print("잘 되지?", "여기는 search!")
+        
+        indices = np.where(dists >= thresh)[0]
+        k = len(indices)
+        dists = dists[:k]
+        ids = ids[:k]
+            
         return dists.flatten().tolist(), ids.flatten().tolist()
         
         
+    def search_order_by_filter(self, embedding: list[float], filter_embedding: list[float], thresh: float) -> (list[float], list[int]):
+        dists, ids = self.index.search(np.array(embedding).reshape(1, -1), 10)
+        print("잘 되지?", "여기는 search_order_by_filter야!")
         
+        indices = np.where(dists >= thresh)[0]
+        k = len(indices)
+        dists = dists[:k]
+        ids = ids[:k]
         
+        dists = dists.flatten().tolist()
+        ids = ids.flatten().tolist()
+        
+        results = [(cos_sim(np.array(filter_embedding), self.index.reconstruct(id)), id) for id in ids]
+        results.sort(reverse=True)
+        
+        return tuple(list(x) for x in zip(*results))
