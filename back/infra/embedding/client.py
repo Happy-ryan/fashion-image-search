@@ -1,4 +1,5 @@
 import httpx
+from fastapi import HTTPException, status
 
 # --embedding server에 embedding 요청
 class EmbeddingClient:
@@ -18,13 +19,19 @@ class EmbeddingClient:
     
     async def get_text_embedding(self, text: str):
         async with httpx.AsyncClient() as client:
-            response = await client.get(
+            response = await client.post(
                 f"{self.API_URL}/text",
                 timeout=None,
                 json = {
                     "text": text,
                 }
             )
+            
+            if response.status_code != 200:
+                raise HTTPException(
+                    status_code=response.status_code,
+                    detail="text embedding client error!"
+                )
             
             embedding = response.json()["embedding"]
             return embedding            
