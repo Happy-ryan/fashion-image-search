@@ -4,6 +4,7 @@ import uvicorn
 app = FastAPI()
 
 from routes.embedding import embedding_router
+
 app.include_router(embedding_router, prefix="/embedding")
 
 @app.get("/")

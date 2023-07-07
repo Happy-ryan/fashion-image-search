@@ -34,7 +34,7 @@ class SearchModel:
         self.index.add_with_ids(np.array(embs), np.array(ids))
         
         
-    def search(self, embedding: list[float], thresh: float) -> (list[float], list[int]):
+    def search(self, embedding: list[float], thresh: float) -> tuple[list[float], list[int]]:
         dists, ids = self.index.search(np.array(embedding).reshape(1, -1), 10)
         print("잘 되지?", "여기는 search!")
         
@@ -46,7 +46,7 @@ class SearchModel:
         return dists.flatten().tolist(), ids.flatten().tolist()
         
         
-    def search_order_by_filter(self, embedding: list[float], filter_embedding: list[float], thresh: float) -> (list[float], list[int]):
+    def search_order_by_filter(self, embedding: list[float], filter_embedding: list[float], thresh: float) -> tuple[list[float], list[int]]:
         dists, ids = self.index.search(np.array(embedding).reshape(1, -1), 10)
         print("잘 되지?", "여기는 search_order_by_filter야!")
         
