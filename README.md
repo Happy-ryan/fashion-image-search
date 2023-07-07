@@ -2,7 +2,7 @@
 Input image, get back matching image fashion results, using Gradio and Fashion-CLIP
 
 ## Application Structure
-![app-structure](/asset/structure.png)
+![app-structure](/asset/structure2.png)
 
 ## Dir Tree
 
@@ -11,11 +11,9 @@ Input image, get back matching image fashion results, using Gradio and Fashion-C
 fashion-image-search
 ├─ README.md
 ├─ asset
-│  └─ structure.png
+│  └─ structure2.png
 ├─ back
 │  ├─ embedding.py
-│  ├─ search.py
-│  ├─ proxy.py
 │  ├─ infra
 │  │  ├─ embedding
 │  │  │  ├─ client.py
@@ -23,19 +21,25 @@ fashion-image-search
 │  │  ├─ metadata
 │  │  └─ search
 │  │     ├─ client.py
-│  │     └─ model.py
+│  │     ├─ model.py
+│  │     └─ utils.py
 │  ├─ models
 │  │  ├─ __init__.py
+│  │  ├─ embedding.py
+│  │  ├─ proxy.py
 │  │  └─ search.py
+│  ├─ proxy.py
 │  ├─ routes
 │  │  ├─ __init__.py
 │  │  ├─ embedding.py
 │  │  ├─ proxy.py
 │  │  └─ search.py
+│  └─ search.py
 ├─ front
-│  ├─ flagged
 │  └─ main.py
-└─ jupyternotebook
+├─ jupyternotebook
+│  └─ fashion-image-search-demo.ipynb
 │  ├─ httpx_test.ipynb
-   └─ fashion-image-search-demo.ipynb
+│  └─ iter_test.ipynb
+└─ requirments.txt
 ```
