@@ -13,6 +13,7 @@ import httpx
 
 from infra.embedding.client import EmbeddingClient
 from infra.search.client import SearchClient
+from infra.storage.client import LocalStorageClient
 
 from models.proxy import ImageP, TextP, FilterP
 
@@ -22,20 +23,19 @@ proxy_router = APIRouter(
 
 embedding_client = EmbeddingClient()
 search_client = SearchClient()
+storage_client = LocalStorageClient("queries")
 
 @proxy_router.post("/search-by-image")
 # async def search_by_image(file: UploadFile, thresh: float) -> dict:
 async def search_by_image(file: UploadFile, thresh: Annotated[float, Form()]) -> dict:
     # -- input_image를 storage/queries 저장
-    UPLOAD_DIR = "storage/queries"
     print(f"proxy server 여기까지는 왔니? - 1, thresh - {thresh}")
     
     content = await file.read()
     rid = str(uuid.uuid4())
-    filname = f"{rid}.png" # --uuid로 유니크한 파일명으로 변경(중복방지)
-    with open(os.path.join(UPLOAD_DIR, filname), "wb") as fp:
-        fp.write(content) # -- 서버 로컬스토리지에 이미지 저장
-        
+    filename = f"{rid}.png" # --uuid로 유니크한 파일명으로 변경(중복방지)
+    storage_client.save(filename, content)
+    print("여기 도착했나요??")
     embedding = await embedding_client.get_image_embedding(rid)
     
     dists, ids = await search_client.search(embedding, thresh)
@@ -73,13 +73,10 @@ async def search_by_text(textp: TextP)-> dict:
 @proxy_router.post("/search-by-filter")
 async def search_by_filter(file: UploadFile, text: Annotated[str, Form()], thresh: Annotated[float, Form()]) -> dict:
     # -- input_image를 storage/queries 저장
-    UPLOAD_DIR = "storage/queries"
-    
     content = await file.read()
     rid = str(uuid.uuid4())
     filename = f"{rid}.png"
-    with open(os.path.join(UPLOAD_DIR, filename), 'wb') as fp:
-        fp.write(content)
+    storage_client.save(filename, content)
         
     embedding = await embedding_client.get_image_embedding(rid)
     

@@ -2,6 +2,7 @@ import faiss
 import os
 import numpy as np
 import pickle
+import yaml
 
 from .utils import cos_sim
 
@@ -16,19 +17,21 @@ result = index.search(input_emb.reshape(1, -1), 2) <- input_emb: np.array
 '''
 
 class SearchModel:
-    DATA_PATH = 'storage/embedding'
     
-    
-    def __init__(self):
+    def __init__(self, config_path: str):
+        with open(config_path) as f:
+            self.conf = yaml.safe_load(f)
+        self.DATA_DIR = os.path.join(self.conf["storage"], "embedding") # embedding -> pickle로 수정할 것!
+        
         index = faiss.IndexFlatIP(512) #--embedding의 차원 수,
         self.index = faiss.IndexIDMap2(index) # --embedding에 id를 부여하기위해서
     
         ids = []
         embs = []
-        for filename in os.listdir(self.DATA_PATH):
+        for filename in os.listdir(self.DATA_DIR):
             id = filename.split(".")[0] # 000.pkl
             ids.append(id)
-            with open(os.path.join(self.DATA_PATH, filename), "rb") as f:
+            with open(os.path.join(self.DATA_DIR, filename), "rb") as f:
                 emb = pickle.load(f)
                 embs.append(emb)
         self.index.add_with_ids(np.array(embs), np.array(ids))
