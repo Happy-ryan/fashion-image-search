@@ -7,7 +7,7 @@ embedding_router = APIRouter(
     tags=["Embedding"]
 )
 
-model = EmbeddingModel()
+model = EmbeddingModel(config_path="../config.yaml")
 
 @embedding_router.get("/image/{rid}")
 async def get_image_embedding(rid: str) -> dict:

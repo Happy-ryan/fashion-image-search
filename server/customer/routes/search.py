@@ -7,7 +7,7 @@ search_router = APIRouter(
     tags=["Search"],
 )
 
-model = SearchModel()
+model = SearchModel(config_path="../config.yaml")
 
 # -- get을 써야해, post를 써야해? => "요청바디 사용" => post
 # (text or image의 단일한 embedding)을 처리하는 라우터로 변경해야함.
