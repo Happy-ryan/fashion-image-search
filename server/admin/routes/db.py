@@ -16,5 +16,5 @@ async def make_pickle(parm: DbParm) -> dict:
 
     return {
         "msg": "pickle 저장 성공!",
-        "pickles": pickles
+        "pickles": len(pickles)
     }
