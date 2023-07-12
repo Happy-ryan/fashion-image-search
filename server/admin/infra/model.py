@@ -21,7 +21,7 @@ class DataBase:
         if not os.path.exists(self.SAVE_DIR):
             os.makedirs(self.SAVE_DIR)
         
-        embedding = self.flip.encode_images(paths, batch_size=1).flatten() # (1, 512) -> flatten -> (512,)
+        embedding = self.flip.encode_images(paths, batch_size=1) # (1, 512) -> flatten -> (512,) -> flatten이 문젠가?
         embedding /= np.linalg.norm(embedding) # 정규화
         
         pickles = []

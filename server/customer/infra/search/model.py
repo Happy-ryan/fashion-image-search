@@ -21,7 +21,7 @@ class SearchModel:
     def __init__(self, config_path: str):
         with open(config_path) as f:
             self.conf = yaml.safe_load(f)
-        self.DATA_DIR = os.path.join(self.conf["storage"], "embedding") # embedding -> pickle로 수정할 것!
+        self.DATA_DIR = os.path.join(self.conf["storage"], "pickle") # embedding -> pickle로 수정할 것!
         
         index = faiss.IndexFlatIP(512) #--embedding의 차원 수,
         self.index = faiss.IndexIDMap2(index) # --embedding에 id를 부여하기위해서
@@ -34,6 +34,8 @@ class SearchModel:
             with open(os.path.join(self.DATA_DIR, filename), "rb") as f:
                 emb = pickle.load(f)
                 embs.append(emb)
+        print("여기는 id..개수",len(ids))
+        print("여기는 embs..개수",len(embs))
         self.index.add_with_ids(np.array(embs), np.array(ids))
         
         
