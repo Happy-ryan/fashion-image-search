@@ -13,7 +13,7 @@ import httpx
 
 from infra.embedding.client import EmbeddingClient
 from infra.search.client import SearchClient
-from infra.storage.client import LocalStorageClient
+from infra.storage.client import LocalStorageClient, GCStorageClient
 
 from models.proxy import ImageP, TextP, FilterP
 
@@ -23,7 +23,7 @@ proxy_router = APIRouter(
 
 embedding_client = EmbeddingClient()
 search_client = SearchClient()
-storage_client = LocalStorageClient("queries")
+storage_client = LocalStorageClient("queries", config_path="../config.yaml")
 
 @proxy_router.post("/search-by-image")
 # async def search_by_image(file: UploadFile, thresh: float) -> dict:
