@@ -15,4 +15,5 @@ storage
 jupyter
 
 store
-.env
+gcp
+config.yaml
