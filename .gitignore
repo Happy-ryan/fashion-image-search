@@ -1,19 +1,11 @@
 .python-version
-storage
-test
-*.pyc
-error_log.md
 __pycache__
-gradio_practice
-log.csv
 .git
+error_log.md
 flagged
-db_test.ipynb
-save5000
-txt_img_cos_705 copy.ipynb
-storage
-jupyter
+gradio_practice
 
-store
-gcp
+/jupyter
+/storage
+/gcs
 config.yaml
