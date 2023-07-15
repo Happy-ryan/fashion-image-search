@@ -1,7 +1,16 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 from routes.proxy import proxy_router
 
@@ -15,4 +24,4 @@ async def servercheck() -> dict:
     
 
 if __name__ == "__main__":
-    uvicorn.run("proxy:app", port=8000, host="0.0.0.0", reload=False)
+    uvicorn.run("proxy:app", port=30007, host="0.0.0.0", reload=False)
