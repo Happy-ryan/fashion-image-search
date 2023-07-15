@@ -13,7 +13,7 @@ import httpx, time
 
 from infra.embedding.client import EmbeddingClient
 from infra.search.client import SearchClient
-from infra.storage.client import LocalStorageClient
+from infra.storage.client import LocalStorageClient, GCStorageClient
 
 from models.proxy import ImageP, TextP, FilterP
 
@@ -29,7 +29,7 @@ proxy_router = APIRouter(
 
 embedding_client = EmbeddingClient()
 search_client = SearchClient()
-storage_client = LocalStorageClient("queries")
+storage_client = LocalStorageClient("queries", config_path="../config.yaml")
 
 client = MongoClient(config["ATLAS_URI"],connect=False)
 mydb = client[config["DB_NAME"]]

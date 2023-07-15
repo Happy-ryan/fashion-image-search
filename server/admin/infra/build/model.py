@@ -7,7 +7,7 @@ import yaml
 import numpy as np
 
 
-class DataBase:
+class BuildModel:
 
     def __init__(self, config_path: str):
         with open(config_path) as f:
@@ -21,7 +21,7 @@ class DataBase:
         if not os.path.exists(self.SAVE_DIR):
             os.makedirs(self.SAVE_DIR)
         
-        embedding = self.flip.encode_images(paths, batch_size=1) # (1, 512) -> flatten -> (512,) -> flatten이 문젠가?
+        embedding = self.flip.encode_images(paths, batch_size=32) # (1, 512) -> flatten -> (512,) -> flatten이 문젠가?
         embedding /= np.linalg.norm(embedding) # 정규화
         
         pickles = []
@@ -30,5 +30,5 @@ class DataBase:
             with open(os.path.join(self.SAVE_DIR, f"{key}.pkl"), "wb") as f:
                 pickles.append(os.path.join(self.SAVE_DIR, f"{key}.pkl"))
                 pickle.dump(output_emb, f)
-                          
+
         return pickles

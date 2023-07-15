@@ -2,8 +2,8 @@ import httpx
 import pandas as pd
 from fastapi import HTTPException, status, UploadFile, File
 
-class DataBaseClient:
-    API_URL = "http://localhost:8003/db"
+class BuildClient:
+    API_URL = "http://localhost:8003/build"
     
     async def make_pickle(self, keys: list[int], paths: list[str]):
         async with httpx.AsyncClient() as client:

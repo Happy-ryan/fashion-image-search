@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-class DbParm(BaseModel):
+class BuildParam(BaseModel):
     keys: list[int]
     paths: list[str]
     
