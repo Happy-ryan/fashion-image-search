@@ -6,7 +6,7 @@ proxy server의 역할
 '''
 
 from typing import Annotated
-from fastapi import APIRouter, UploadFile, Form
+from fastapi import APIRouter, UploadFile, Form, File
 import uuid
 import os
 import httpx, time
@@ -21,8 +21,13 @@ from dotenv import dotenv_values
 from pymongo import MongoClient
 from pprint import pprint
 
-config = dotenv_values("/opt/ml/fashion-image-search/server/admin/.env")
+from .utils import objectIdDecoder
 
+# config = dotenv_values("/opt/ml/fashion-image-search/server/admin/.env")
+import yaml
+with open('../config.yaml') as f:
+    config = yaml.load(f, Loader=yaml.FullLoader)
+    
 proxy_router = APIRouter(
     tags=["Proxy"],
 )
@@ -31,12 +36,12 @@ embedding_client = EmbeddingClient()
 search_client = SearchClient()
 storage_client = LocalStorageClient("queries", config_path="../config.yaml")
 
-client = MongoClient(config["ATLAS_URI"],connect=False)
-mydb = client[config["DB_NAME"]]
+client = MongoClient(config["mongodb"]["url"],connect=False)
+mydb = client[config["mongodb"]["name"]]
 
 @proxy_router.post("/search-by-image")
 # async def search_by_image(file: UploadFile, thresh: float) -> dict:
-async def search_by_image(file: UploadFile, thresh: Annotated[float, Form()]) -> dict:
+async def search_by_image(file: Annotated[UploadFile, File()], thresh: Annotated[float, Form()]) -> dict:
     # -- input_image를 storage/queries 저장
     print(f"proxy server 여기까지는 왔니? - 1, thresh - {thresh}")
     
@@ -60,15 +65,17 @@ async def search_by_image(file: UploadFile, thresh: Annotated[float, Form()]) ->
     documents = collection.find({'key': {'$in': ids}})
     sorted_documents = sorted(documents, key=lambda doc: ids.index(doc['key']))
 
-    for doc in sorted_documents:
-        print(doc)
+    # product_list = []
+    # for doc in sorted_documents:
+    #     print(doc)
 
     
     return {
-        "msg": "OK",
-        "embedding": embedding,
-        "dists": dists,
-        "ids": ids,
+        # "msg": "OK",
+        # "embedding": embedding,
+        # "dists": dists,
+        # "ids": ids,
+        "상품목록": objectIdDecoder(sorted_documents)
     }
     
 
@@ -102,6 +109,7 @@ async def search_by_text(textp: TextP)-> dict:
 async def search_by_filter(file: UploadFile, text: Annotated[str, Form()], thresh: Annotated[float, Form()]) -> dict:
     # -- input_image를 storage/queries 저장
     content = await file.read()
+
     rid = str(uuid.uuid4())
     filename = f"{rid}.png"
     storage_client.save(filename, content)
@@ -116,14 +124,17 @@ async def search_by_filter(file: UploadFile, text: Annotated[str, Form()], thres
     documents = collection.find({'key': {'$in': ids}})
     sorted_documents = sorted(documents, key=lambda doc: ids.index(doc['key']))
 
-    print("list", list(sorted_documents))
-    print("찾은 상품의 수", len(list(sorted_documents)))
+    # print("list", type(sorted_documents))
+    # print("찾은 상품의 수", len(list(sorted_documents)))
+    # print("첫 번째", sorted_documents[0])
+    # print("뭐가 나올까요?", objectIdDecoder(sorted_documents))
     # for doc in sorted_documents:
     #     print(doc)
-    
+  
     return {
-        "msg": "OK",
-        "embedding": embedding,
-        "dists": dists,
-        "ids": ids,
+        # "msg": "OK",
+        # "embedding": embedding,
+        # "dists": dists,
+        # "ids": ids,
+        "상품목록": objectIdDecoder(sorted_documents)
     }
