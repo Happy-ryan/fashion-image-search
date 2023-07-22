@@ -15,13 +15,11 @@ from infra.embedding.client import EmbeddingClient
 from infra.search.client import SearchClient
 from infra.storage.client import LocalStorageClient, GCStorageClient
 
-from models.proxy import ImageP, TextP, FilterP
-
 from dotenv import dotenv_values
 from pymongo import MongoClient
 from pprint import pprint
 
-from .utils import objectIdDecoder
+from .utils import objectIdDecoder, translate_text
 
 # config = dotenv_values("/opt/ml/fashion-image-search/server/admin/.env")
 import yaml
@@ -80,28 +78,29 @@ async def search_by_image(file: Annotated[UploadFile, File()], thresh: Annotated
     
 
 @proxy_router.post("/search-by-text")
-async def search_by_text(textp: TextP)-> dict:
+async def search_by_text(text: Annotated[str, Form()], thresh: Annotated[float, Form()])-> dict:
     print("proxy server 여기까지는 왔니? - 2")
     
-    text = textp.text
-    thresh = textp.thresh
+    text = translate_text(text)
     
     embedding = await embedding_client.get_text_embedding(text)
     
     dists, ids = await search_client.search(embedding, thresh)
     
-    collection = mydb["Top"]
+    collection = mydb[config["mongodb"]["collection"]]
     documents = collection.find({'key': {'$in': ids}})
     sorted_documents = sorted(documents, key=lambda doc: ids.index(doc['key']))
 
-    for doc in sorted_documents:
-        print(doc)
+    # for doc in sorted_documents:
+    #     print(doc)
     
     return {
-        "msg": "OK",
-        "embedding": embedding,
-        "dists": dists,
-        "ids": ids,
+        # "msg": "OK",
+        # "embedding": embedding,
+        # "dists": dists,
+        # "ids": ids,
+        "번역 결과": text,
+        "상품목록": objectIdDecoder(sorted_documents)
     }
     
 
@@ -113,6 +112,8 @@ async def search_by_filter(file: UploadFile, text: Annotated[str, Form()], thres
     rid = str(uuid.uuid4())
     filename = f"{rid}.png"
     storage_client.save(filename, content)
+    
+    text = translate_text(text)
         
     embedding = await embedding_client.get_image_embedding(rid)
     
@@ -136,5 +137,6 @@ async def search_by_filter(file: UploadFile, text: Annotated[str, Form()], thres
         # "embedding": embedding,
         # "dists": dists,
         # "ids": ids,
+        "번역 결과": text,
         "상품목록": objectIdDecoder(sorted_documents)
     }

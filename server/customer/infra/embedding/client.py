@@ -13,6 +13,12 @@ class EmbeddingClient:
                 timeout=None
             )
             
+            if response.status_code != 200:
+                raise HTTPException(
+                    status_code=response.status_code,
+                    detail="EmbeddingClient - get_image_embedding is error!"
+                )
+            
             embedding = response.json()["embedding"]
             return embedding
         
@@ -30,7 +36,7 @@ class EmbeddingClient:
             if response.status_code != 200:
                 raise HTTPException(
                     status_code=response.status_code,
-                    detail="text embedding client error!"
+                    detail="EmbeddingClient - get_text_embedding is error!"
                 )
             
             embedding = response.json()["embedding"]

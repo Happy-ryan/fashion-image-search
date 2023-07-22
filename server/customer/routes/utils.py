@@ -1,4 +1,6 @@
 from collections import defaultdict
+import googletrans
+
 
 def objectIdDecoder(list):
   results=[]
@@ -22,3 +24,9 @@ def objectIdDecoder(list):
     # dic['subcategory'] = doc['subcategory']
     results.append(dic)
   return results
+
+
+def translate_text(text: str):
+    translator = googletrans.Translator()
+    result = translator.translate(text, dest='en')
+    return result.text
