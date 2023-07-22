@@ -61,15 +61,15 @@ async def search_by_image(file: Annotated[UploadFile, File()], thresh: Annotated
     # find 후 정렬을 사용하는 것이 find만 사용하는 것보다 0.0003s 차이지만 find_one보다는 압도적 성능을 지닌다.
     # 빠른 검색이 목적: find / 유사도 정렬이 목적: find_one
  
-    collection = mydb["Top"]
+    collection = mydb[config["mongodb"]["collection"]]
     documents = collection.find({'key': {'$in': ids}})
     sorted_documents = sorted(documents, key=lambda doc: ids.index(doc['key']))
 
     # product_list = []
     # for doc in sorted_documents:
-    #     print(doc)
+    #     print(doc['meta'])
 
-    
+    # print("여기를 살펴보자!", sorted_documents)
     return {
         # "msg": "OK",
         # "embedding": embedding,
@@ -120,7 +120,7 @@ async def search_by_filter(file: UploadFile, text: Annotated[str, Form()], thres
     
     dists, ids = await search_client.search_with_filter(embedding, filter_embedding, thresh)
     
-    collection = mydb["Top"]
+    collection = mydb[config["mongodb"]["collection"]]
     documents = collection.find({'key': {'$in': ids}})
     sorted_documents = sorted(documents, key=lambda doc: ids.index(doc['key']))
 

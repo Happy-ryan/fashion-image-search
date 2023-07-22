@@ -41,9 +41,6 @@ def dataframe2list(df: pd.DataFrame):
     for _, row in df.iterrows():
         json_template = {
             **row,
-            "category": {
-                "type": "Top" # TODO: edit this
-            }
         }
         json_list.append(json_template)
     return json_list
