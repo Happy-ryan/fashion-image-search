@@ -28,7 +28,7 @@ class EmbeddingClient:
             response = await client.post(
                 f"{self.API_URL}/text",
                 timeout=None,
-                json = {
+                data = {
                     "text": text,
                 }
             )

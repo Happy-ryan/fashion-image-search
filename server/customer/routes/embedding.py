@@ -1,4 +1,5 @@
-from fastapi import APIRouter
+from typing import Annotated
+from fastapi import APIRouter, Form
 
 from infra.embedding.model import EmbeddingModel
 from models.embedding import Text
@@ -20,9 +21,9 @@ async def get_image_embedding(rid: str) -> dict:
     
 # url에 query x => post => 요청바디 필요
 @embedding_router.post("/text")
-async def get_image_embedding(text: Text) -> dict:
+async def get_image_embedding(text: Annotated[str, Form()]) -> dict:
     print("내가 넣은 text는 여기다!:", text.text)
-    embedding = model.get_text_embedding(text.text)
+    embedding = model.get_text_embedding(text)
     return {
         "msg": "OK!",
         "embedding": embedding

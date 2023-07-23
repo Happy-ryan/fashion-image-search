@@ -10,8 +10,8 @@ class EmbeddingModel:
             self.conf = yaml.safe_load(f)
         self.IMG_DIR = os.path.join(self.conf["storage"], "queries")
         self.flip = FashionCLIP("fashion-clip")
-        
-    
+
+
     def get_image_embedding(self, rid: str) -> list[float]:
         filename = f"{rid}.png"
         
