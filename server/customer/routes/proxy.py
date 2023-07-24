@@ -80,7 +80,7 @@ async def search_by_text(text: Annotated[str, Form()], thresh: Annotated[float, 
         # "embedding": embedding,
         # "dists": dists,
         # "ids": ids,
-        "번역 결과": text,
+        "번역결과": text,
         "상품목록": documents,
     }
     
@@ -109,6 +109,6 @@ async def search_by_filter(file: UploadFile, text: Annotated[str, Form()], thres
         # "embedding": embedding,
         # "dists": dists,
         # "ids": ids,
-        "번역 결과": text,
+        "번역결과": text,
         "상품목록": documents,
     }
