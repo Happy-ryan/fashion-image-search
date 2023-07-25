@@ -10,6 +10,7 @@ from fastapi import APIRouter, UploadFile, Form, File
 import uuid
 import os
 import httpx, time
+import asyncio
 
 from infra.embedding.client import EmbeddingClient
 from infra.search.client import SearchClient
@@ -17,11 +18,10 @@ from infra.storage.client import LocalStorageClient, GCStorageClient
 from infra.meta.client import MetaClient
 from infra.translate.client import GoogleTranslateClient
 
-from dotenv import dotenv_values
-from pymongo import MongoClient
 from pprint import pprint
 
-# config = dotenv_values("/opt/ml/fashion-image-search/server/admin/.env")
+import hashlib
+
 import yaml
 with open('../config.yaml') as f:
     config = yaml.load(f, Loader=yaml.FullLoader)
@@ -44,10 +44,11 @@ async def search_by_image(file: Annotated[UploadFile, File()], thresh: Annotated
     print(f"proxy server 여기까지는 왔니? - 1, thresh - {thresh}")
     
     content = await file.read()
-    rid = str(uuid.uuid4())
+    rid = hashlib.sha256(content).hexdigest()
     filename = f"{rid}.png" # --uuid로 유니크한 파일명으로 변경(중복방지)
     storage_client.save(filename, content)
     print("여기 도착했나요??")
+    
     embedding = await embedding_client.get_image_embedding(rid)
     
     dists, ids = await search_client.search(embedding, thresh)
@@ -90,15 +91,13 @@ async def search_by_filter(file: UploadFile, text: Annotated[str, Form()], thres
     # -- input_image를 storage/queries 저장
     content = await file.read()
 
-    rid = str(uuid.uuid4())
+    rid = hashlib.sha256(content).hexdigest()
     filename = f"{rid}.png"
     storage_client.save(filename, content)
     
     text = await translate_client.translate(text)
-
-    embedding = await embedding_client.get_image_embedding(rid)
     
-    filter_embedding = await embedding_client.get_text_embedding(text)
+    embedding, filter_embedding = await asyncio.gather(embedding_client.get_image_embedding(rid), embedding_client.get_text_embedding(text))
     
     dists, ids = await search_client.search_with_filter(embedding, filter_embedding, thresh)
     
