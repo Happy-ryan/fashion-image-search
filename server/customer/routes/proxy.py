@@ -97,8 +97,12 @@ async def search_by_filter(file: UploadFile, text: Annotated[str, Form()], thres
     
     text = await translate_client.translate(text)
     
-    embedding, filter_embedding = await asyncio.gather(embedding_client.get_image_embedding(rid), embedding_client.get_text_embedding(text))
+    # embedding, filter_embedding = await asyncio.gather(embedding_client.get_image_embedding(rid), embedding_client.get_text_embedding(text))
     
+    embedding = await embedding_client.get_image_embedding(rid)
+    
+    filter_embedding = await embedding_client.get_text_embedding(text)
+
     dists, ids = await search_client.search_with_filter(embedding, filter_embedding, thresh)
     
     documents = meta_client.find(ids)
