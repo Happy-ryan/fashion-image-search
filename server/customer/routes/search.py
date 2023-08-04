@@ -16,10 +16,10 @@ async def search(parm: SearchParm) -> dict:
     
     dists, ids = model.search(parm.embedding, parm.thresh) 
     
-    k = 10
-    if len(dists) > k:
-        dists = dists[:k]
-        ids = ids[:k]
+    # k = 50
+    # if len(dists) > k:
+    #     dists = dists[:k]
+    #     ids = ids[:k]
 
     return {
         "msg": "Search OK!",
@@ -33,10 +33,10 @@ async def search_with_filter(parm: SearchWithFilterParam) -> dict:
     
     dists, ids = model.search_order_by_filter(parm.embedding, parm.filter_embedding, parm.thresh)
     
-    k = 10
-    if len(dists) > k:
-        dists = dists[:k]
-        ids = ids[:k]
+    # k = 10
+    # if len(dists) > k:
+    #     dists = dists[:k]
+    #     ids = ids[:k]
 
     return {
         "msg": "Search OK!",

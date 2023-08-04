@@ -40,7 +40,7 @@ class SearchModel:
         
         
     def search(self, embedding: list[float], thresh: float) -> tuple[list[float], list[int]]:
-        dists, ids = self.index.search(np.array(embedding).reshape(1, -1), 10)
+        dists, ids = self.index.search(np.array(embedding).reshape(1, -1), 50)
         print("잘 되지?", "여기는 search!")
         
         indices = np.where(dists >= thresh)[0]
@@ -52,7 +52,7 @@ class SearchModel:
         
         
     def search_order_by_filter(self, embedding: list[float], filter_embedding: list[float], thresh: float) -> tuple[list[float], list[int]]:
-        dists, ids = self.index.search(np.array(embedding).reshape(1, -1), 10)
+        dists, ids = self.index.search(np.array(embedding).reshape(1, -1), 50)
         print("잘 되지?", "여기는 search_order_by_filter야!")
         
         indices = np.where(dists >= thresh)[0]

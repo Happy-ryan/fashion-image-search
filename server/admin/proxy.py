@@ -4,9 +4,19 @@ import uvicorn
 from dotenv import dotenv_values
 from pymongo import MongoClient
 
+from fastapi.middleware.cors import CORSMiddleware
+
 # config = dotenv_values(".env")
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 from routes.proxy import proxy_router
 
@@ -35,4 +45,4 @@ async def servercheck() -> dict:
 
 
 if __name__ == "__main__":
-    uvicorn.run("proxy:app", port=8005, host="0.0.0.0", reload=True)
+    uvicorn.run("proxy:app", port=30007, host="0.0.0.0", reload=True)

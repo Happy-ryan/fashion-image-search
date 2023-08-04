@@ -58,8 +58,8 @@ async def search_by_image(file: Annotated[UploadFile, File()], thresh: Annotated
     return {
         # "msg": "OK",
         # "embedding": embedding,
-        # "dists": dists,
-        # "ids": ids,
+        "dists": dists[:2],
+        "ids": ids,
         "상품목록": documents,
     }
     
@@ -79,8 +79,8 @@ async def search_by_text(text: Annotated[str, Form()], thresh: Annotated[float, 
     return {
         # "msg": "OK",
         # "embedding": embedding,
-        # "dists": dists,
-        # "ids": ids,
+        "dists": dists[:2],
+        "ids": ids,
         "번역결과": text,
         "상품목록": documents,
     }
@@ -110,8 +110,8 @@ async def search_by_filter(file: UploadFile, text: Annotated[str, Form()], thres
     return {
         # "msg": "OK",
         # "embedding": embedding,
-        # "dists": dists,
-        # "ids": ids,
+        "dists": dists[:2],
+        "ids": ids,
         "번역결과": text,
         "상품목록": documents,
     }

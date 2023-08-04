@@ -38,9 +38,9 @@ async def upload(file: UploadFile = File(...)):
         
     return {
         "등록된 총 상품의 수(기존 등록 상품 포함)": num_total_items,
-        "추가된 상품의 수": num_inserted_items,
-        "수정된 상품의 수": num_modified_items,
-        "수정되지 않거나 추가되지 않은 상품의 수": num_total_items - (num_inserted_items + num_modified_items),
+        "새롭게 추가된 상품의 수": num_inserted_items,
+        "수정된 기존 등록된 상품의 수": num_modified_items,
+        "수정되지 않은 기존 상품의 수": num_total_items - (num_inserted_items + num_modified_items),
         "생성된 임베딩의 수(csv파일에 존재하는 상품의 수)": num_pickles,
         "(추가된 상품의 수 + 수정된 상품의 수)와 (생성된 임베딩의 수)의 차는 0이다!": num_inserted_items + num_modified_items - num_pickles
     }
