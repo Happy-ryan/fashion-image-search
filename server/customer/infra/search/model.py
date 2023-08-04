@@ -63,7 +63,7 @@ class SearchModel:
         dists = dists.flatten().tolist()
         ids = ids.flatten().tolist()
         
-        results = [(cos_sim(np.array(filter_embedding), self.index.reconstruct(id)), id) for id in ids]
+        results = [(float(cos_sim(np.array(filter_embedding), self.index.reconstruct(id))), id) for id in ids]
         results.sort(reverse=True)
         
         return tuple(list(x) for x in zip(*results))

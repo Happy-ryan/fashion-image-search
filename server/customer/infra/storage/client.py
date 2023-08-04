@@ -1,8 +1,6 @@
 import os
 import io
 import yaml
-from google.cloud import storage
-from google.oauth2 import service_account
 
 
 class LocalStorageClient:
@@ -23,6 +21,9 @@ class GCStorageClient:
     def __init__(self, sub_dir: str, config_path: str):
         with open(config_path) as f:
             self.conf = yaml.safe_load(f)
+            
+        from google.cloud import storage
+        from google.oauth2 import service_account
 
         credentials = service_account.Credentials.from_service_account_file(self.conf["key_path"])
         # 구글 스토리지 클라이언트 객체 생성
